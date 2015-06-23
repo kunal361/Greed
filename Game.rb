@@ -2,9 +2,9 @@ require "./Player.rb"
 class Game
 
 	def initialize(number_of_players)
-	@final = false # set when game enters final round
-	@breaker = -1 # equal to the player that first achieves the score 3000
-	@number_of_players = number_of_players #number of players playing the game
+		@final = false # set when game enters final round
+		@breaker = -1 # equal to the player that first achieves the score 3000
+		@number_of_players = number_of_players #number of players playing the game
 		@players = Array.new(number_of_players) { |player| # Array storing all the player objects
 			player = Player.new
 		}
@@ -33,13 +33,12 @@ class Game
 		[current_score, unscored]
 	end
 
-  def one_turn (player) #simulates one turn of a given player
+def one_turn (player) #simulates one turn of a given player
 		@players[player].roll(5)
 		puts "#{@players[player].name}: #{@players[player].turn.values}"
 		current_score, unscored = score(@players[player].turn.values)
 		puts "Current turn score: #{current_score}"
-
-    if unscored == 5
+	if unscored == 5
 			puts "#{@players[player].name} scored 0 on this roll. Hence passes turn"
 			return
 		end
@@ -109,20 +108,20 @@ class Game
 		end
 	end
 
-  def round #simulates a round
-    player = 0
-    while player < @number_of_players
-      if player != @breaker
-        one_turn player
-      end
-      if @final
-        break
-      end
-      player += 1
-    end
-  end
+	def round #simulates a round
+		player = 0
+		while player < @number_of_players
+			if player != @breaker
+				one_turn player
+			end
+			if @final
+				break
+			end
+			player += 1
+		end
+	end
 
-  def play #simulates the game
+	def play #simulates the game
 		while true
 			puts "--------------------------------\n\t New Round\n--------------------------------"
 			round
