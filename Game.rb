@@ -33,12 +33,12 @@ class Game
 		[current_score, unscored]
 	end
 
-def one_turn (player) #simulates one turn of a given player
+	def one_turn (player) #simulates one turn of a given player
 		@players[player].roll(5)
 		puts "#{@players[player].name}: #{@players[player].turn.values}"
 		current_score, unscored = score(@players[player].turn.values)
 		puts "Current turn score: #{current_score}"
-	if unscored == 5
+		if unscored == 5
 			puts "#{@players[player].name} scored 0 on this roll. Hence passes turn"
 			return
 		end
@@ -53,15 +53,14 @@ def one_turn (player) #simulates one turn of a given player
 			puts "#{@players[player].name} passes turn"
 		end
 
-    while unscored > 0
+		while unscored > 0
 			if @players[player].wants_to_continue
 				@players[player].roll(unscored)
 				puts "#{@players[player].name}: #{@players[player].turn.values}"
 				new_current_score, new_unscored = score(@players[player].turn.values)
 				current_score += new_current_score
 				puts "Current turn score: #{current_score}"
-
-        if new_unscored == unscored
+			if new_unscored == unscored
 					puts "#{@players[player].name} scored 0 on this roll. Hence passes turn"
 					break
 				end
@@ -76,7 +75,6 @@ def one_turn (player) #simulates one turn of a given player
 					end
 					puts "#{@players[player].name} passes turn"
 				end
-
 			elsif(@players[player].in_play)
 				if current_score >= 300 && @players[player].in_play == false
 					puts "#{@players[player].name} joins game!"
