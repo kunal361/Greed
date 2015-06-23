@@ -2,9 +2,9 @@ require "./Player.rb"
 class Game
 
 	def initialize(number_of_players)
-    @final = false # set when game enters final round
-  	@breaker = -1 # equal to the player that first achieves the score 3000
-    @number_of_players = number_of_players #number of players playing the game
+	@final = false # set when game enters final round
+	@breaker = -1 # equal to the player that first achieves the score 3000
+	@number_of_players = number_of_players #number of players playing the game
 		@players = Array.new(number_of_players) { |player| # Array storing all the player objects
 			player = Player.new
 		}
@@ -25,7 +25,7 @@ class Game
 				unscored -= 3
 				count_values[value] -= 3
 				current_score = value == 1 ? 1000 : 100 * value
-      end
+			end
 			value += 1
 		end
 		unscored -= count_values[1] + count_values[5]
