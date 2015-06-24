@@ -33,77 +33,6 @@ class Game
     [current_score, unscored]
   end
 
-  def one_turn (player) #simulates one turn of a given player
-    @players[player].roll(5)
-    puts "#{@players[player].name}: #{@players[player].turn.values}"
-    current_score, unscored = score(@players[player].turn.values)
-    puts "Current turn score: #{current_score}"
-    if unscored == 5
-      puts "#{@players[player].name} scored 0 on this roll. Hence passes turn"
-      return
-    end
-    if unscored == 0
-      if current_score >= 300 && @players[player].in_play == false
-        puts "#{@players[player].name} joins game!"
-        @players[player].start_play
-      end
-      if @players[player].in_play
-        @players[player].add_to_score(current_score)
-      end
-      puts "#{@players[player].name} passes turn"
-      if @breaker == -1 && !@final && @players[player].score >= 3000
-        @breaker = player
-        @final = true
-        return
-      end
-    end
-
-    while unscored > 0
-      if @players[player].wants_to_continue
-        @players[player].roll(unscored)
-        puts "#{@players[player].name}: #{@players[player].turn.values}"
-        new_current_score, new_unscored = score(@players[player].turn.values)
-        current_score += new_current_score
-        puts "Current turn score: #{current_score}"
-      if new_unscored == unscored
-          puts "#{@players[player].name} scored 0 on this roll. Hence passes turn"
-          break
-        end
-        unscored = new_unscored
-        if unscored == 0
-          if current_score >= 300 && @players[player].in_play == false
-            puts "#{@players[player].name} joins game!"
-            @players[player].start_play
-          end
-          if @players[player].in_play
-            @players[player].add_to_score(current_score)
-          end
-          puts "#{@players[player].name} passes turn"
-        end
-      elsif(@players[player].in_play)
-        if current_score >= 300 && @players[player].in_play == false
-          puts "#{@players[player].name} joins game!"
-          @players[player].start_play
-        end
-        if @players[player].in_play
-          @players[player].add_to_score(current_score)
-        end
-        puts "#{@players[player].name} passes turn"
-        if @breaker == -1 && !@final && @players[player].score >= 3000
-          @breaker = player
-          @final = true
-        end
-        break
-      end
-      if @breaker == -1 && !@final && @players[player].score >= 3000
-        @breaker = player
-        @final = true
-        puts "#{@players[player].name} passes turn"
-        break
-      end
-    end
-  end
-
   def print_scores #prints scores after the latest round
     puts "--------------------------------\nScores after this round\n--------------------------------"
     player = 0
@@ -113,12 +42,51 @@ class Game
     end
   end
 
+  def one_turn (player, unscored) #simulates one turn of a given player
+    
+    @players[player].roll(unscored)
+    puts "#{@players[player].name}: #{@players[player].turn.values}"
+    current_score, new_unscored = score(@players[player].turn.values)
+    puts "Current roll score: #{current_score}"
+    if current_score == 0
+      return 0
+    elsif new_unscored > 0 && @players[player].wants_to_continue
+      returned_score = one_turn(player, new_unscored)
+      current_score += returned_score
+      if returned_score == 0
+        return 0
+      end
+    end
+    current_score
+
+  end
+
   def round #simulates a round
     puts "--------------------------------\n\t New Round\n--------------------------------"
     player = 0
     while player < @number_of_players
       if player != @breaker
-        one_turn player
+        current_score = one_turn(player, 5)
+        puts  "#{@players[player].name} scored #{current_score} in this round!"
+        if current_score == 0
+          puts "#{@players[player].name} scores 0, hence passes turn."
+        elsif @players[player].in_play
+          @players[player].add_to_score(current_score)
+          puts "#{@players[player].name} passes turn."
+        elsif current_score < 300
+          puts "#{@players[player].name} passes turn."
+        end
+        if !@players[player].in_play && current_score >= 300
+          puts "#{@players[player].name} joins game"
+          puts "#{@players[player].name} passes turn."
+          @players[player].start_play
+          @players[player].add_to_score(current_score)
+        end
+        if @players[player].score >= 3000
+          @final = true
+          @breaker = player
+          break
+        end
       end
       if @final
         break
