@@ -105,6 +105,7 @@ class Game
   end
 
   def print_scores #prints scores after the latest round
+    puts "--------------------------------\nScores after this round\n--------------------------------"
     player = 0
     while player < @number_of_players
       puts  "#{@players[player].name}: #{@players[player].score}"
@@ -113,6 +114,7 @@ class Game
   end
 
   def round #simulates a round
+    puts "--------------------------------\n\t New Round\n--------------------------------"
     player = 0
     while player < @number_of_players
       if player != @breaker
@@ -127,19 +129,17 @@ class Game
 
   def play #simulates the game
     while true
-      puts "--------------------------------\n\t New Round\n--------------------------------"
       round
-      puts "--------------------------------\nScores after this round\n--------------------------------"
       print_scores
       break if @final
     end
-    puts "--------------------------------\n\tFinal round\n--------------------------------"
+    puts "--------------------------------\nFinal round starts!!!\n--------------------------------"
     @final = false
     round
-    puts "--------------------------------\nScores After Final round\n--------------------------------"
     print_scores
     winner = @players.max_by {|player| player.score}
     puts "--------------------------------\n\tWinner\n--------------------------------"
     puts winner.name
   end
+
 end
