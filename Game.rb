@@ -50,6 +50,11 @@ class Game
       if @players[player].in_play
         @players[player].add_to_score(current_score)
       end
+      if @breaker == -1 && !@final && @players[player].score >= 3000
+        @breaker = player
+        @final = true
+        return
+      end
       puts "#{@players[player].name} passes turn"
     end
 
