@@ -2,17 +2,26 @@ require "./Player.rb"
 class Game
 
   def initialize(number_of_players)
+    
+    if(number_of_players.class != Fixnum)
+      raise ArgumentError, "Integer required"
+    end
+    if(number_of_players < 2)
+      raise "NotSufficientPlayersError: minimum 2 players required"
+    end
+    
     @final = false # set when game enters final round
     @breaker = -1 # equal to the player that first achieves the score 3000
     @number_of_players = number_of_players #number of players playing the game
-    @players = Array.new(number_of_players) { |player| # Array storing all the player objects
-      player = Player.new
-    }
+    @players = Array.new # Array storing all the player objects
+    number_of_players.times do
+      @players << Player.new
+    end
   end
 
   def score(values) #calculates the score of the imput dice values, returns the score and the number of dices that did not add to the score
     unscored = values.size
-    count_values = Array.new(7) { |count_value| count_value = 0 }
+    count_values = Array.new(7,0)
     dice = 0
     while dice < values.size
       count_values[ values[dice] ] += 1
@@ -105,9 +114,13 @@ class Game
     @final = false
     round
     print_scores
+
     winner = @players.max_by {|player| player.score}
-    puts "--------------------------------\n\tWinner\n--------------------------------"
-    puts winner.name
+    winners = @players.select{|player| player.score == winner.score}
+    puts "--------------------------------\n\tWinner(s)\n--------------------------------"
+    winners.each do |player|
+      puts player.name
+    end
   end
 
 end
