@@ -2,7 +2,6 @@ require "./Player.rb"
 class Game
 
   def initialize(number_of_players)
-    
     if(number_of_players.class != Fixnum)
       raise ArgumentError, "Integer required"
     end
@@ -21,24 +20,24 @@ class Game
 
   def score(values) #calculates the score of the imput dice values, returns the score and the number of dices that did not add to the score
     unscored = values.size
-    count_values = Array.new(7,0)
+    count_values = Array.new(6,0)
     dice = 0
     while dice < values.size
-      count_values[ values[dice] ] += 1
+      count_values[ values[dice] - 1 ] += 1
       dice += 1
     end
     current_score = 0
-    value = 1
-    while value < 7
+    value = 0
+    while value < 6
       if count_values[value] >= 3
         unscored -= 3
         count_values[value] -= 3
-        current_score = value == 1 ? 1000 : 100 * value
+        current_score = value == 0 ? 1000 : 100 * (value + 1)
       end
       value += 1
     end
-    unscored -= count_values[1] + count_values[5]
-    current_score += count_values[1] * 100 + count_values[5] * 50
+    unscored -= count_values[0] + count_values[4]
+    current_score += count_values[0] * 100 + count_values[4] * 50
     [current_score, unscored]
   end
 
@@ -52,7 +51,6 @@ class Game
   end
 
   def one_turn (player, unscored) #simulates one turn of a given player
-    
     @players[player].roll(unscored)
     puts "#{@players[player].name}: #{@players[player].turn.values}"
     current_score, new_unscored = score(@players[player].turn.values)
@@ -67,7 +65,6 @@ class Game
       end
     end
     current_score
-
   end
 
   def round #simulates a round

@@ -17,17 +17,13 @@ class Player
   end
   
   def wants_to_continue # returns true if player wants to continue else false
-    #rand(2) == 1
     print @name + ": Do you want to continue (Y/N): "
     option = gets.chomp
     while(option != 'Y' && option != 'N')
       print "Enter either 'Y' or 'N' : "
       option = gets.chomp
     end
-    if(option == 'Y')
-      return true
-    end
-    return false
+    option == 'Y'
   end
   
   def start_play #sets the in_play variable
